@@ -1,0 +1,30 @@
+{
+  "watchlist": {
+    "600519": "贵州茅台",
+    "000001": "平安银行",
+    "300750": "宁德时代"
+  },
+  "interval_seconds": 60,
+  "alerts": {
+    "price_change_pct": 3.0,
+    "volume_ratio": 1.8
+  },
+  "notifiers": {
+    "console": {
+      "enabled": true
+    },
+    "dingtalk": {
+      "enabled": false,
+      "webhook": ""
+    },
+    "wecom": {
+      "enabled": false,
+      "webhook": ""
+    }
+  },
+  "database": "stock_monitor.db",
+  "daily": {
+    "history_days": 120,
+    "summary_time": "15:05"
+  }
+}
