@@ -1,6 +1,6 @@
 # Stock Monitor
 
-行情自测
+万元级别个人股票监控工具。新浪 API 实时行情 + 技术指标分析 + 多通道推送 + Web 报表。
 
 ## 功能
 
@@ -8,7 +8,8 @@
 - 技术指标：MA5/10/20/60、MACD、RSI(14)、KDJ
 - 收盘结算推送（SQLite 持久化）
 - 异动提醒：涨跌幅阈值、放量检测
-- 推送渠道
+- 推送渠道：控制台、钉钉、企业微信
+- Web 报表：`python report.py` 生成静态 HTML 仪表盘
 
 ## 使用
 
@@ -16,6 +17,7 @@
 pip install pandas
 # 编辑 config.json 配置关注股票和推送渠道
 python main.py
+python report.py    # 生成 Web 报表
 ```
 
 ## 依赖
