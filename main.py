@@ -1,6 +1,7 @@
 import json
 import time
 import signal
+import sys
 from datetime import datetime, date, time as dt_time
 
 from collector import fetch_realtime
@@ -118,5 +119,35 @@ def main():
     print("[main] 已停止")
 
 
+def run_once(config, storage, notifiers):
+    watchlist = config.get("watchlist", {})
+    now = datetime.now()
+
+    if should_run_daily(None):
+        print(f"[main] CI: 执行收盘结算")
+        msgs = analyze_daily(watchlist, storage, config)
+        for msg in msgs:
+            push_all(notifiers, "收盘总结", msg)
+        return
+
+    if not (is_trading_day() and is_trading_time()):
+        return
+
+    print(f"[main] CI: 盘中轮询")
+    data = fetch_realtime(watchlist)
+    if not data:
+        return
+
+    alerts = analyze_realtime(data, storage, config, watchlist)
+    for alert in alerts:
+        push_all(notifiers, alert["title"], alert["body"])
+
+
 if __name__ == "__main__":
-    main()
+    if "--once" in sys.argv:
+        cfg = load_config()
+        s = Storage(cfg.get("database", "stock_monitor.db"))
+        n = create_notifiers(cfg.get("notifiers", {}))
+        run_once(cfg, s, n)
+    else:
+        main()

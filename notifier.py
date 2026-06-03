@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 import requests
 
@@ -57,10 +58,15 @@ def create_notifiers(config):
     notifiers = []
     if config.get("console", {}).get("enabled", False):
         notifiers.append(ConsoleNotifier())
-    dt = config.get("dingtalk", {})
-    if dt.get("enabled", False) and dt.get("webhook"):
-        notifiers.append(DingTalkNotifier(dt["webhook"]))
-    wc = config.get("wecom", {})
-    if wc.get("enabled", False) and wc.get("webhook"):
-        notifiers.append(WeComNotifier(wc["webhook"]))
+
+    dt_webhook = os.environ.get("DINGTALK_WEBHOOK") or config.get("dingtalk", {}).get("webhook")
+    dt_enabled = config.get("dingtalk", {}).get("enabled", False) or bool(os.environ.get("DINGTALK_WEBHOOK"))
+    if dt_enabled and dt_webhook:
+        notifiers.append(DingTalkNotifier(dt_webhook))
+
+    wc_webhook = os.environ.get("WECOM_WEBHOOK") or config.get("wecom", {}).get("webhook")
+    wc_enabled = config.get("wecom", {}).get("enabled", False) or bool(os.environ.get("WECOM_WEBHOOK"))
+    if wc_enabled and wc_webhook:
+        notifiers.append(WeComNotifier(wc_webhook))
+
     return notifiers
