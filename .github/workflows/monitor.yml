@@ -2,8 +2,16 @@ name: Monitor
 
 on:
   schedule:
-    - cron: '*/10 1-7 * * 1-5'
+    - cron: '*/5 1-7 * * 1-5'
   workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
 
 jobs:
   run:
@@ -14,8 +22,15 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt
-      - name: Run monitor
+      - name: Run
         env:
+          PYTHONIOENCODING: utf-8
           DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
           WECOM_WEBHOOK: ${{ secrets.WECOM_WEBHOOK }}
-        run: python main.py --once
+        run: python live_report.py
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy to Pages
+        uses: actions/deploy-pages@v4
