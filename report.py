@@ -1,4 +1,4 @@
-import json, sys
+import json, sys, traceback
 from datetime import datetime
 import pandas as pd
 from storage import Storage
@@ -123,7 +123,7 @@ body {{ font-family:-apple-system,'Segoe UI',sans-serif; background:#0d1117; col
 </head>
 <body>
 <div class="header">
-    <h1>📊 Stock Monitor</h1>
+    <h1>Stock Monitor</h1>
     <div class="time">\u66f4\u65b0\u4e8e {now}</div>
 </div>
 <div class="grid">{cards}</div>
@@ -167,4 +167,20 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        err = traceback.format_exc()
+        print(err, flush=True)
+        # generate error page
+        html = f"""<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Stock Monitor - Error</title></head>
+<body style="background:#0d1117;color:#c9d1d9;padding:40px;font-family:sans-serif;">
+<h1>Error</h1>
+<pre style="color:#f85149;">{err}</pre>
+</body>
+</html>"""
+        with open("index.html", "w", encoding="utf-8") as f:
+            f.write(html)
+        sys.exit(1)

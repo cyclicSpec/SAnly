@@ -24,6 +24,8 @@ jobs:
           python-version: '3.12'
       - run: pip install pandas
       - name: Generate report
+        env:
+          PYTHONIOENCODING: utf-8
         run: python report.py
       - name: Setup Pages
         uses: actions/configure-pages@v4
