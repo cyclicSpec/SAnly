@@ -26,13 +26,14 @@ jobs:
       - name: Generate report
         env:
           PYTHONIOENCODING: utf-8
-        run: python report.py
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+        run: |
+          python report.py
+          mkdir -p _site
+          cp index.html _site/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: index.html
+          path: _site
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
