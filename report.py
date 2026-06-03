@@ -161,9 +161,9 @@ def main():
     signals = s.get_recent_signals(20)
     html = build_html(data, signals)
 
-    with open("report.html", "w", encoding="utf-8") as f:
+    with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"report.html generated: {len(data)} stocks, {len(signals)} signals")
+    print(f"index.html generated: {len(data)} stocks, {len(signals)} signals")
 
 
 if __name__ == "__main__":
